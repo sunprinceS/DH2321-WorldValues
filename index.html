@@ -1,0 +1,69 @@
+<html>
+  <head>
+      <title>DH2321 Project1 - Group Formation</title>
+      <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css" />
+      <link rel="stylesheet" type="text/css" href="css/d3-tip.css" />
+      <link rel="stylesheet" type="text/css" href="css/svg.css" />
+      <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+      <!--Title-->
+      <div class="ui huge inverted segment">
+          <h1 class="ui center aligned header">Visualization of Group Formation</h1>
+          <h3 class="ui center aligned header">By <a href="https://sunprinces.github.io/" target="_blank">Jui-Yang Hsu</a><img class="ui avatar image" src="sun.jpg" /></h3>
+      </div>
+
+      <!--Map part-->
+     <div class="ui violet big piled segment">
+        <h1 class="ui header">
+        <i class="Users icon"></i>
+        <div class="content">
+          Group Ability Distribution
+        <div class="sub header">Members & Radar Charts</div>
+        </h1>
+
+        <div class="ui center aligned segment" id="bubble-wrapper">
+        </div>
+          
+        </div>
+
+      </div>
+
+    <div id="menu">
+          <h2>&larr; Radius axis</h2>
+          <ul id="r-axis-menu"></ul>
+          <h2>&uarr; Y axis</h2>
+          <ul id="y-axis-menu"></ul>
+          <h2>&rarr; X axis</h2>
+        <ul id="x-axis-menu"></ul>
+        </div>
+
+
+
+
+
+
+
+      <div class="ui center aligned container">
+          <div class="ui left floated buttons"><button class="large ui facebook button"><i class="facebook icon"></i>  Facebook</button><button class="ui twitter button"><i class="twitter icon"></i>  Twitter</button><button class="ui google plus button"><i class="google plus icon"></i>  Google Plus</button></div>
+          <div
+              class="ui right floated buttons">
+              <div class="ui left labeled button" tabindex="0"><a class="ui basic right pointing blue label">1,048</a>
+                  <div class="ui blue button"><i class="fork icon"></i> Forks</div>
+              </div>
+              <div class="ui labeled button">
+                  <div class="ui red button"><i class="heart icon"></i></div><a class="ui basic red left pointing label">999</a></div>
+      </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+      <script src="semantic/dist/semantic.min.js"></script>
+      <script>
+          $('.ui.dropdown').dropdown();
+      </script>
+      <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="http://d3js.org/queue.v1.min.js"></script>
+      <script src="http://d3js.org/topojson.v1.min.js"></script>
+      <script src=js/underscore-min.js></script>
+      <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+      <script src="js/bubble.js"></script>
+  </head>
+</html>
