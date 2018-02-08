@@ -21,21 +21,46 @@
         <div class="sub header">Members & Radar Charts</div>
         </h1>
 
-        <div class="ui center aligned segment" id="bubble-wrapper">
-        </div>
-          
-        </div>
+        <div class="ui grid">
+          <div class="row">
+            <div class="two wide column">
+              <div class="ui vertical menu">
+                <div class="ui left pointing dropdown link item">
+                  <i class="dropdown icon"></i>
+                  xAxis
+                  <div class="menu" id="x-axis-menu">
+                  </div>
+                </div>
+                <div class="ui left pointing dropdown link item">
+                  <i class="dropdown icon"></i>
+                  yAxis
+                  <div class="menu" id="y-axis-menu">
+                  </div>
+                </div>
+                <div class="ui left pointing dropdown link item">
+                  <i class="dropdown icon"></i>
+                  rAxis
+                  <div class="menu" id="r-axis-menu">
+                  </div>
+                </div>
+              </div>
+            <div class="ui dropdown">
+              <div class="text">Choose Wave</div>
+              <i class="dropdown icon"></i>
+              <div class="menu" id="wave-menu">
+              </div>
+            </div>
+            </div>
 
+            <div class="one wide column"></div>
+            <div class="twelve wide column">
+              <div class="ui center aligned segment" id="bubble-wrapper"></div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-    <div id="menu">
-          <h2>&larr; Radius axis</h2>
-          <ul id="r-axis-menu"></ul>
-          <h2>&uarr; Y axis</h2>
-          <ul id="y-axis-menu"></ul>
-          <h2>&rarr; X axis</h2>
-        <ul id="x-axis-menu"></ul>
-        </div>
 
 
 
@@ -60,10 +85,12 @@
           $('.ui.dropdown').dropdown();
       </script>
       <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-      <script src="http://d3js.org/queue.v1.min.js"></script>
+      <script src="http://d3js.org/d3-queue.v3.min.js"></script>
       <script src="http://d3js.org/topojson.v1.min.js"></script>
       <script src=js/underscore-min.js></script>
       <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+      <!--<script src="js/util.js"></script>-->
       <script src="js/bubble.js"></script>
+      <script>loadData();</script>
   </head>
 </html>

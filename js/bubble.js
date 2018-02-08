@@ -67,324 +67,339 @@ function getCorrelation(xArray, yArray) {
   return {r: r, m: m, b: b};
 }
 
+function loadData(){
+  d3.queue()
+  .defer(d3.csv,'data/wave3.csv')
+  .defer(d3.csv,'data/wave4.csv')
+  .defer(d3.csv,'data/wave5.csv')
+  .defer(d3.csv,'data/wave6.csv')
+  .await(function(error,wave3,wave4,wave5,wave6){
+    if(error) {console.log(error);}
+    // Main part
 
-// Main part
-d3.csv('data/gapminder-w3.csv', function(data) {
+    //init
+    var xAxis = 'neighborImmigrant', yAxis = 'universityManImp',rAxis='Population';
 
-  //init
-  var xAxis = 'GDP', yAxis = 'Life-length',rAxis='Population';
-  var xAxisOptions=["Mortality","CO2-avg","CO2-total","Life-length","Fertility","GDP","Population"];
-  var yAxisOptions=["Mortality","CO2-avg","CO2-total","Life-length","Fertility","GDP","Population"];
-  var rAxisOptions=["Mortality","CO2-avg","CO2-total","Life-length","Fertility","GDP","Population"];
+    var xAxisOptions=["neighborImmigrant","childrenHardWork","universityManImp","childrenFaith","neighborReligion","neighborRace","BetterLeader","fightCountry","HomosexJustify","trust","SuicideJus","EnvImp","childrenThrift","religiousPerson","divorceJus","childrenImigination","NationProud"];
+    var yAxisOptions=["neighborImmigrant","childrenHardWork","universityManImp","childrenFaith","neighborReligion","neighborRace","BetterLeader","fightCountry","HomosexJustify","trust","SuicideJus","EnvImp","childrenThrift","religiousPerson","divorceJus","childrenImigination","NationProud"];
+    var rAxisOptions=["Mortality","CO2-avg","CO2-total","Life-length","Fertility","GDP","Population"];
 
-  var descriptions = {
-    "Mortality":"0-5 year-olds dying per 1000 born",
-    "CO2-avg":"CO2 emission (tonnes per person)",
-    "CO2-total":"Yearly CO2 emission (1000 tonnes)",
-    "Life-length":"Average number of years a newborn child live (years)",
-    "Fertility":"Babies per woman",
-    "GDP":"GDP per person (US$)",
-    "Population":"Total Population"
-  };
-  var toColor={
-    'AF':"#990099",
-    'AS':"#ff9900",
-    'EU':"#3366cc",
-    'NAA':"#dc3912",
-    'SA':"#109618",
-    'OC':"#dd4477"
-  }
-
-  var data = parseData(data);
-  var bounds = getBounds(data, 1);
-
-  // SVG canvas
-  var svg = d3.select("#bubble-wrapper")
-    .append("svg")
-    .attr("width", 1000)
-    .attr("height", 640);
-
-
-
-  var tip = d3.tip()
-              .attr('class', 'd3-tip')
-              .offset([-10, 0])
-              .html(function(d,s) {
-                return "<strong>Country: </strong><span class='details'>" + d.Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + d[s] +"</span>";
-              })
-
-  var margin = {top: 0, right: 0, bottom: 0, left: 0},
-              width = 960 - margin.left - margin.right,
-              height = 500 - margin.top - margin.bottom;
-
-  var xScale, yScale;
-
-  svg.append('g')
-    .classed('chart', true)
-    .attr('transform', 'translate(80, -60)');
-
-  svg.call(tip);
-  // Build menus
-  d3.select('#x-axis-menu')
-    .selectAll('li')
-    .data(xAxisOptions)
-    .enter()
-    .append('li')
-    .text(function(d) {return d;})
-    .classed('selected', function(d) {
-      return d === xAxis;
-    })
-    .on('click', function(d) {
-      xAxis = d;
-      updateChart();
-      updateMenus();
-    });
-
-  d3.select('#y-axis-menu')
-    .selectAll('li')
-    .data(yAxisOptions)
-    .enter()
-    .append('li')
-    .text(function(d) {return d;})
-    .classed('selected', function(d) {
-      return d === yAxis;
-    })
-    .on('click', function(d) {
-      yAxis = d;
-      updateChart();
-      updateMenus();
-    });
-
-  d3.select('#r-axis-menu')
-    .selectAll('li')
-    .data(rAxisOptions)
-    .enter()
-    .append('li')
-    .text(function(d) {return d;})
-    .classed('selected', function(d) {
-      return d === rAxis;
-    })
-    .on('click', function(d) {
-      rAxis = d;
-      updateChart();
-      updateMenus();
-    });
-
-
-  // Country name
-  d3.select('svg g.chart')
-    .append('text')
-    .attr({'id': 'countryLabel', 'x': 70, 'y': 200})
-    .style({'font-size': '50px', 'font-weight': 'bold', 'fill': '#ddd'});
-
-  d3.selection.prototype.moveToFront = function() {  
-        return this.each(function(){
-          this.parentNode.appendChild(this);
-        });
-      };
-  d3.selection.prototype.moveToBack = function() {  
-      return this.each(function() { 
-          var firstChild = this.parentNode.firstChild; 
-          if (firstChild) { 
-              this.parentNode.insertBefore(this, firstChild); 
-          } 
-      });
+    var descriptions = {
+      "neighborImmigrant": "Would not like to have neighbors like immigrants (%)",
+      "childrenHardWork":  "Important for children to be hard-working (%)",
+      "universityManImp": "University education is important for men than women (pt)",
+      "childrenFaith": "Important for children to have faith (%)",
+      "neighborReligion": "Would not like to have neighbors with different religion (%)",
+      "neighborRace": "Would not like to have neighbors with different race (%)",
+      "BetterLeader": "Men make better political leaders than women do (pt)",
+      "fightCountry": "Willingness to fight for country (pt)",
+      "HomosexJustify": "Homosexuality is justifiable (mean pt)",
+      "trust": "Most people can be trusted (%)",
+      "SuicideJus":"Suicide is justifiable (mean pt)",
+      "EnvImp": "Environment protection is more important than economic development",
+      "childrenThrift": "Important for children to save money (%)",
+      "religiousPerson": "Be religious (%)",
+      "divorceJus": "Divorce is justifiable (mean pt)",
+      "childrenImigination": "Important for children to have imagination (%)",
+      "NationProud": "Proud of country (pt)",
+      "Mortality":"0-5 year-olds dying per 1000 born",
+      "CO2-avg":"CO2 emission (tonnes per person)",
+      "CO2-total":"Yearly CO2 emission (1000 tonnes)",
+      "Life-length":"Average number of years a newborn child live (years)",
+      "Fertility":"Babies per woman",
+      "GDP":"GDP per person (US$)",
+      "Population":"Total Population"
     };
-  // Best fit line (to appear behind points)
-  //d3.select('svg g.chart')
-    //.append('line')
-    //.attr('id', 'bestfit');
 
-  // Axis labels
-  d3.select('svg g.chart')
-    .append('text')
-    .attr({'id': 'xLabel', 'x': 400, 'y': 670, 'text-anchor': 'middle'})
-    .text(descriptions[xAxis]);
+    var toColor={
+      'AF':"#990099",
+      'AS':"#ff9900",
+      'EU':"#3366cc",
+      'NAA':"#dc3912",
+      'SA':"#109618",
+      'OC':"#dd4477"
+    }
 
-  d3.select('svg g.chart')
-    .append('text')
-    .attr('transform', 'translate(-60, 330)rotate(-90)')
-    .attr({'id': 'yLabel', 'text-anchor': 'middle'})
-    .text(descriptions[yAxis]);
+    var curWave = 0;
+    var wave = [0,1,2,3];
+    var waveDescriptions= ['Wave3','Wave4','Wave5','Wave6'];
+    var data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
+    var bounds = [getBounds(wave3,1),getBounds(wave4,1),getBounds(wave5,1),getBounds(wave6,1)];
 
-  // Render points
-  updateScales();
-  d3.select('svg g.chart')
-    .selectAll('circle')
-    .data(data)
-    .enter()
-    .append('circle')
-    .attr('cx', function(d) {
-      return isNaN(d[xAxis]) ? d3.select(this).attr('cx') : xScale(d[xAxis]);
+    // SVG canvas
+    var svg = d3.select("#bubble-wrapper")
+      .append("svg")
+      .attr("width", 1300)
+      .attr("height", 740);
+
+
+
+    var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d,s) {
+                  return "<strong>Country: </strong><span class='details'>" + d.Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + d[s] +"</span>";
+                })
+
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
+                width = 1260 - margin.left - margin.right,
+                height = 600 - margin.top - margin.bottom;
+
+    var xScale, yScale;
+
+    svg.append('g')
+      .classed('chart', true)
+      .attr('transform', 'translate(80, -60)');
+
+    svg.call(tip);
+    // Build menus
+    d3.select('#wave-menu')
+    .selectAll('div')
+    .data(wave)
+    .enter().append('div')
+    .attr('class','item')
+    .text(function(d){return waveDescriptions[d];})
+    .classed('selected',function(d){
+      return d === curWave;
     })
-    .attr('cy', function(d) {
-      return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
-    })
-    .attr('fill', function(d) {return toColor[d['Continent']];})
-    .style('cursor', 'pointer')
-    .on('mouseover', function(d) {
-      d3.select('svg g.chart #countryLabel')
-        .text(d.Name)
-        .transition()
-        .style('opacity', 1);
-      tip.show(d,rAxis);
-      d3.select(this).moveToFront();
-    })
-    .on('mouseout', function(d) {
-      d3.select('svg g.chart #countryLabel')
-        .transition()
-        .duration(1500)
-        .style('opacity', 0);
-      tip.hide(rAxis);
-      d3.select(this).moveToBack();
+    .on('click',function(d){
+      curWave = d;
+      updateChart();
     });
 
-  updateChart(true);
-  updateMenus();
+    d3.select('#x-axis-menu')
+      .selectAll('div')
+      .data(xAxisOptions)
+      .enter().append('div')
+      .attr('class','item')
+      .text(function(d) {return d;})
+      .classed('selected', function(d) {
+        return d === xAxis;
+      })
+      .on('click', function(d) {
+        xAxis = d;
+        updateChart();
+        updateMenus();
+      });
 
-  // Render axes
-  d3.select('svg g.chart')
-    .append("g")
-    .attr('transform', 'translate(0, 630)')
-    .attr('id', 'xAxis')
-    .call(makeXAxis);
+    d3.select('#y-axis-menu')
+      .selectAll('div')
+      .data(yAxisOptions)
+      .enter().append('div')
+      .attr('class','item')
+      .text(function(d) {return d;})
+      .classed('selected', function(d) {
+        return d === yAxis;
+      })
+      .on('click', function(d) {
+        yAxis = d;
+        updateChart();
+        updateMenus();
+      });
 
-  d3.select('svg g.chart')
-    .append("g")
-    .attr('id', 'yAxis')
-    .attr('transform', 'translate(-10, 0)')
-    .call(makeYAxis);
+    d3.select('#r-axis-menu')
+      .selectAll('div')
+      .data(rAxisOptions)
+      .enter().append('div')
+      .attr('class','item')
+      .text(function(d) {return d;})
+      .classed('selected', function(d) {
+        return d === rAxis;
+      })
+      .on('click', function(d) {
+        rAxis = d;
+        updateChart();
+        updateMenus();
+      });
 
+    // Country name
+    d3.select('svg g.chart')
+      .append('text')
+      .attr({'id': 'countryLabel', 'x': 70, 'y': 100})
+      .style({'font-size': '50px', 'font-weight': 'bold', 'fill': '#ddd'});
 
+    // Best fit line (to appear behind points)
+    d3.select('svg g.chart')
+      .append('line')
+      .attr('id', 'bestfit');
 
-  //// RENDERING FUNCTIONS
-  function updateChart(init) {
-    updateScales();
+    // Axis labels
+    d3.select('svg g.chart')
+      .append('text')
+      .attr({'id': 'xLabel', 'x': 400, 'y': 780, 'text-anchor': 'middle'})
+      .text(descriptions[xAxis]);
 
     d3.select('svg g.chart')
+      .append('text')
+      .attr({'id': 'rLabel', 'x':700, 'y':690, 'text-anchor': 'right'})
+      .text(descriptions[rAxis]);
+
+    d3.select('svg g.chart')
+      .append('text')
+      .attr('transform', 'translate(-60, 330)rotate(-90)')
+      .attr({'id': 'yLabel', 'text-anchor': 'middle'})
+      .text(descriptions[yAxis]);
+
+    // Render points
+    updateScales();
+    d3.select('svg g.chart')
       .selectAll('circle')
-      .transition()
-      .duration(500)
-      .ease('quad-out')
+      .data(data[curWave])
+      .enter()
+      .append('circle')
       .attr('cx', function(d) {
         return isNaN(d[xAxis]) ? d3.select(this).attr('cx') : xScale(d[xAxis]);
       })
       .attr('cy', function(d) {
         return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
       })
-      .attr('r', function(d) {
-        return isNaN(d[xAxis] || d[yAxis]) || isNaN(d[rAxis]) ? 0 : rScale(d[rAxis]);
+      .attr('fill', function(d) {return toColor[d['Continent']];})
+      .style('cursor', 'pointer')
+      .on('mouseover', function(d) {
+        d3.select('svg g.chart #countryLabel')
+          .text(d.Name)
+          .transition()
+          .style('opacity', 1);
+        tip.show(d,rAxis);
+        //d3.select(this).moveToFront();
+      })
+      .on('mouseout', function(d) {
+        d3.select('svg g.chart #countryLabel')
+          .transition()
+          .duration(1500)
+          .style('opacity', 0);
+        tip.hide(rAxis);
+        //d3.select(this).moveToBack();
       });
 
-    // Also update the axes
-    d3.select('#xAxis')
-      .transition()
+    updateChart(true);
+    updateMenus();
+
+    // Render axes
+    d3.select('svg g.chart')
+      .append("g")
+      .attr('transform', 'translate(0, 730)')
+      .attr('id', 'xAxis')
       .call(makeXAxis);
 
-    d3.select('#yAxis')
-      .transition()
+    d3.select('svg g.chart')
+      .append("g")
+      .attr('id', 'yAxis')
+      .attr('transform', 'translate(-10, 0)')
       .call(makeYAxis);
 
-    // Update axis labels
-    d3.select('#xLabel')
-      .text(descriptions[xAxis]);
 
-    // Update correlation
-    var xArray = _.map(data, function(d) {return d[xAxis];});
-    var yArray = _.map(data, function(d) {return d[yAxis];});
-    var c = getCorrelation(xArray, yArray);
-    var x1 = xScale.domain()[0], y1 = c.m * x1 + c.b;
-    var x2 = xScale.domain()[1], y2 = c.m * x2 + c.b;
 
-    // Fade in
-    d3.select('#bestfit')
-      .style('opacity', 0)
-      .attr({'x1': xScale(x1), 'y1': yScale(y1), 'x2': xScale(x2), 'y2': yScale(y2)})
-      .transition()
-      .duration(1500)
-      .style('opacity', 1);
-  }
+    //// RENDERING FUNCTIONS
+    function updateChart(init) {
+      updateScales();
 
-  function updateScales() {
-    console.log(bounds);
-    if(xAxis == 'GDP' || xAxis == 'CO2-total' || xAxis == 'CO2-avg'){
-      xScale = d3.scale.log()
-                      .domain([bounds[xAxis].min, bounds[xAxis].max])
-                      .range([20, 780]);
+      d3.select('svg g.chart')
+        .selectAll('circle')
+        .transition()
+        .duration(500)
+        .ease('quad-out')
+        .attr('cx', function(d) {
+          return isNaN(d[xAxis]) ? d3.select(this).attr('cx') : xScale(d[xAxis]);
+        })
+        .attr('cy', function(d) {
+          return isNaN(d[yAxis]) ? d3.select(this).attr('cy') : yScale(d[yAxis]);
+        })
+        .attr('r', function(d) {
+          return isNaN(d[xAxis] || d[yAxis]) || isNaN(d[rAxis]) ? 0 : rScale(d[rAxis]);
+        });
+
+      // Also update the axes
+      d3.select('#xAxis')
+        .transition()
+        .call(makeXAxis);
+
+      d3.select('#yAxis')
+        .transition()
+        .call(makeYAxis);
+
+      // Update axis labels
+      d3.select('#xLabel')
+        .text(descriptions[xAxis]);
+
+      d3.select('#yLabel')
+        .text(descriptions[yAxis]);
+      d3.select('#rLabel')
+        .text("● "+descriptions[rAxis]);
+      // Update correlation
+      var xArray = _.map(data, function(d) {return d[xAxis];});
+      var yArray = _.map(data, function(d) {return d[yAxis];});
+      var c = getCorrelation(xArray, yArray);
+      var x1 = xScale.domain()[0], y1 = c.m * x1 + c.b;
+      var x2 = xScale.domain()[1], y2 = c.m * x2 + c.b;
+
+      // Fade in
+      d3.select('#bestfit')
+        .style('opacity', 0)
+        .attr({'x1': xScale(x1), 'y1': yScale(y1), 'x2': xScale(x2), 'y2': yScale(y2)})
+        .transition()
+        .duration(1500)
+        .style('opacity', 1);
     }
-    else if(xAxis == 'Population'){
-      xScale = d3.scale.log()
-                      .domain([bounds[xAxis].min, bounds[xAxis].max])
-                      .range([20, 780]);
-    }
-    else{
+
+    function updateScales() {
+      console.log(bounds);
+      console.log(curWave);
       xScale = d3.scale.linear()
-                      .domain([bounds[xAxis].min, bounds[xAxis].max])
-                      .range([20, 780]);
-    }
-
-    if(yAxis == 'GDP' || yAxis == 'CO2-total' || yAxis == 'CO2-avg'){
-      yScale = d3.scale.log()
-                      .domain([bounds[yAxis].min, bounds[yAxis].max])
-                      .range([600, 100]);
-    }
-    else if(yAxis == 'Population'){
-      yScale = d3.scale.log()
-                      .domain([bounds[yAxis].min, bounds[yAxis].max])
-                      .range([600, 100]);
-    }
-    else{
+                      .domain([bounds[curWave][xAxis].min, bounds[curWave][xAxis].max])
+                      .range([20, 900]);
       yScale = d3.scale.linear()
-                      .domain([bounds[yAxis].min, bounds[yAxis].max])
-                      .range([600, 100]);
-    }
-    
-    if(rAxis == 'CO2-total' || rAxis == 'CO2-avg'){
-      rScale = d3.scale.linear()
-                      .domain([bounds[rAxis].min, bounds[rAxis].max])
-                      .range([3, 50]);    
-    }
-    else if(rAxis == 'Population'){
-      rScale = d3.scale.sqrt()
-                      .domain([bounds[rAxis].min, bounds[rAxis].max])
-                      .range([5, 50]);    
-    }
-    else{
-      rScale = d3.scale.linear()
-                      .domain([bounds[rAxis].min, bounds[rAxis].max])
-                      .range([2, 40]);    
-    }
-  }
+                      .domain([bounds[curWave][yAxis].min, bounds[curWave][yAxis].max])
+                      .range([650, 50]);
 
-  function makeXAxis(s) {
-    s.call(d3.svg.axis()
-      .scale(xScale)
-      .orient("bottom"));
-  }
+      if(rAxis == 'CO2-total' || rAxis == 'CO2-avg'){
+        rScale = d3.scale.linear()
+                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
+                        .range([3, 50]);    
+      }
+      else if(rAxis == 'Population'){
+        rScale = d3.scale.sqrt()
+                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
+                        .range([5, 50]);    
+      }
+      else{
+        rScale = d3.scale.linear()
+                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
+                        .range([2, 40]);    
+      }
+    }
 
-  function makeYAxis(s) {
-    s.call(d3.svg.axis()
-      .scale(yScale)
-      .orient("left"));
-  }
+    function makeXAxis(s) {
+      s.call(d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom"));
+    }
 
-  function updateMenus() {
-    d3.select('#x-axis-menu')
-      .selectAll('li')
-      .classed('selected', function(d) {
-        return d === xAxis;
+    function makeYAxis(s) {
+      s.call(d3.svg.axis()
+        .scale(yScale)
+        .orient("left"));
+    }
+
+    function updateMenus() {
+      d3.select('#x-axis-menu')
+        .selectAll('li')
+        .classed('selected', function(d) {
+          return d === xAxis;
+        });
+      d3.select('#y-axis-menu')
+        .selectAll('li')
+        .classed('selected', function(d) {
+          return d === yAxis;
       });
-    d3.select('#y-axis-menu')
-      .selectAll('li')
-      .classed('selected', function(d) {
-        return d === yAxis;
+      d3.select('#r-axis-menu')
+        .selectAll('li')
+        .classed('selected', function(d) {
+          return d === rAxis;
+        });
+    }
+
     });
-    d3.select('#r-axis-menu')
-      .selectAll('li')
-      .classed('selected', function(d) {
-        return d === rAxis;
-      });
-  }
+}
 
-})
 
