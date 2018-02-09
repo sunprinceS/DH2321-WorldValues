@@ -1,0 +1,46 @@
+    var xAxis = 'neighborImmigrant', yAxis = 'universityManImp',rAxis='Population';
+
+    var xAxisOptions=["neighborImmigrant","childrenHardWork","universityManImp","childrenFaith","neighborReligion","neighborRace","BetterLeader","fightCountry","HomosexJustify","trust","SuicideJus","EnvImp","childrenThrift","religiousPerson","divorceJus","childrenImagination","NationProud"];
+    var yAxisOptions=["neighborImmigrant","childrenHardWork","universityManImp","childrenFaith","neighborReligion","neighborRace","BetterLeader","fightCountry","HomosexJustify","trust","SuicideJus","EnvImp","childrenThrift","religiousPerson","divorceJus","childrenImagination","NationProud"];
+    var rAxisOptions=["Mortality","CO2-avg","CO2-total","Life-length","Fertility","GDP","Population"];
+
+    var descriptions = {
+      "neighborImmigrant": "Would not like to have neighbors like immigrants (%)",
+      "childrenHardWork":  "Important for children to be hard-working (%)",
+      "universityManImp": "University education is important for men than women (pt)",
+      "childrenFaith": "Important for children to have faith (%)",
+      "neighborReligion": "Would not like to have neighbors with different religion (%)",
+      "neighborRace": "Would not like to have neighbors with different race (%)",
+      "BetterLeader": "Men make better political leaders than women do (pt)",
+      "fightCountry": "Willingness to fight for country (pt)",
+      "HomosexJustify": "Homosexuality is justifiable (mean pt)",
+      "trust": "Most people can be trusted (%)",
+      "SuicideJus":"Suicide is justifiable (mean pt)",
+      "EnvImp": "Environment protection is more important than economic development",
+      "childrenThrift": "Important for children to save money (%)",
+      "religiousPerson": "Be religious (%)",
+      "divorceJus": "Divorce is justifiable (mean pt)",
+      "childrenImigination": "Important for children to have imagination (%)",
+      "NationProud": "Proud of country (pt)",
+      "Mortality":"0-5 year-olds dying per 1000 born",
+      "CO2-avg":"CO2 emission (tonnes per person)",
+      "CO2-total":"Yearly CO2 emission (1000 tonnes)",
+      "Life-length":"Average number of years a newborn child live (years)",
+      "Fertility":"Babies per woman",
+      "GDP":"GDP per person (US$)",
+      "Population":"Total Population"
+    };
+
+    var toColor={
+      'AF':"#990099",
+      'AS':"#ff9900",
+      'EU':"#3366cc",
+      'NAA':"#dc3912",
+      'SA':"#109618",
+      'OC':"#dd4477"
+    }
+
+    var curWave = 3;
+    var wave = [0,1,2,3];
+    var waveDescriptions= ['Wave3','Wave4','Wave5','Wave6'];
+
