@@ -20,6 +20,7 @@ line#bestfit {
 }
 
 text {
-	font-size: 12px;
-	fill: #888;
+	font-size: 15px;
+  font-weight: 500;
+	fill: #333;
 }

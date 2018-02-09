@@ -1,3 +1,7 @@
 /*******************************
      User Global Variables
 *******************************/
+
+@fontName          : 'Playfair Display SC';
+@headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, serif;
+@pageFont          : 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;

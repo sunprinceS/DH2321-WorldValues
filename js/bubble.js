@@ -17,10 +17,8 @@ function loadData(){
     // SVG canvas
     var svg = d3.select("#bubble-wrapper")
       .append("svg")
-      .attr("width", 1300)
+      .attr("width", 1100)
       .attr("height", 740);
-
-
 
     var tip = d3.tip()
                 .attr('class', 'd3-tip')
@@ -30,7 +28,7 @@ function loadData(){
                 })
 
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
-                width = 1260 - margin.left - margin.right,
+                width = 1060 - margin.left - margin.right,
                 height = 600 - margin.top - margin.bottom;
 
     var xScale, yScale;
@@ -42,11 +40,20 @@ function loadData(){
 
     svg.call(tip);
     d3.select("#reset-btn")
-    .attr('class','ui red button')
+    .attr('class','ui green button')
     .text('deselect highlight')
     .on('click',function(d){
       selectedHighlight = [];
       updateChart();
+    });
+    d3.select('#wave-text').text(waveDescriptions[curWave]);
+    d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
+    d3.select('#wave-slider')
+    .on("input",function(){
+      curWave = d3.select('#wave-slider').property("value");
+      updateChart();
+      updateMenus();
+
     });
     // Build menus
     d3.select('#wave-menu')
@@ -125,10 +132,10 @@ function loadData(){
       .attr({'id': 'xLabel', 'x': 400, 'y': 780, 'text-anchor': 'middle'})
       .text(descriptions[xAxis]);
 
-    d3.select('svg g.chart')
-      .append('text')
-      .attr({'id': 'rLabel', 'x':700, 'y':690, 'text-anchor': 'right'})
-      .text(descriptions[rAxis]);
+    //d3.select('svg g.chart')
+      //.append('text')
+      //.attr({'id': 'rLabel', 'x':700, 'y':690, 'text-anchor': 'right'})
+      //.text(descriptions[rAxis]);
 
     d3.select('svg g.chart')
       .append('text')
@@ -277,7 +284,7 @@ function loadData(){
       //console.log(bounds[curWave][yAxis].max);
       xScale = d3.scale.linear()
                       .domain([bounds[curWave][xAxis].min, bounds[curWave][xAxis].max])
-                      .range([20, 900]);
+                      .range([20, 850]);
       yScale = d3.scale.linear()
                       .domain([bounds[curWave][yAxis].min, bounds[curWave][yAxis].max])
                       .range([650, 130]);
@@ -327,6 +334,8 @@ function loadData(){
         .classed('selected', function(d) {
           return d === rAxis;
         });
+      d3.select('#wave-text').text(waveDescriptions[curWave]);
+      d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
     }
 
     });

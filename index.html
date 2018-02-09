@@ -17,13 +17,13 @@
         <h1 class="ui header">
         <i class="Users icon"></i>
         <div class="content">
-          Group Ability Distribution
-        <div class="sub header">Members & Radar Charts</div>
+          Values Comparison
+        <div class="sub header">2D Scatter Plot with Time Evolving</div>
         </h1>
 
         <div class="ui grid">
           <div class="row">
-            <div class="two wide column">
+            <div class="three wide column">
               <div class="ui vertical menu">
                 <div class="ui left pointing dropdown link item">
                   <i class="dropdown icon"></i>
@@ -44,18 +44,28 @@
                   </div>
                 </div>
               </div>
-            <div class="ui dropdown">
-              <div class="text">Choose Wave</div>
-              <i class="dropdown icon"></i>
-              <div class="menu" id="wave-menu">
+            <!--<div class="ui dropdown">-->
+              <!--<div class="text">Choose Wave</div>-->
+              <!--<i class="dropdown icon"></i>-->
+              <!--<div class="menu" id="wave-menu">-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <div class="ui big segment">
+              <h3 class="ui header" id="wave-text"></h3>
+              <div class="two wide column">
+                <input id ="wave-slider" type="range" min="0" max="3" value="3"/>
               </div>
             </div>
 
-            <div id="reset-btn"></div>
+              <div id="reset-btn"></div>
+              <div class="ui big segment">
+                <text id="r-text"></text>
+              </div>
             </div>
 
             <div class="one wide column"></div>
-            <div class="twelve wide column">
+            <div class="eleven wide column">
               <div class="ui center aligned segment" id="bubble-wrapper"></div>
             </div>
           </div>
