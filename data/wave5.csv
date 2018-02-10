@@ -1,4 +1,4 @@
-idx,Name,Code,Continent,Longitude,Latitude,Mortality,CO2-avg,CO2-total,Life-length,Fertility,GDP,Population,neighborImmigrant,childrenFaith,childrenHardWork,neighborReligion,HomosexualJustify,EnvImp,fightCountry,trust,SuicideJus,religiousPerson,NationProud,universityManImp,divorceJus,BetterLeader,childrenImagination,neighborRace,childrenThrift
+idx,Name,Code,Continent,Longitude,Latitude,Mortality,CO2-avg,CO2-total,Life-length,Fertility,GDP,Population,neighborImmigrant,childrenFaith,childrenHardWork,neighborReligion,HomosexJustify,EnvImp,fightCountry,trust,SuicideJus,religiousPerson,NationProud,universityManImp,divorceJus,BetterLeader,childrenImagination,neighborRace,childrenThrift
 0,Afghanistan,AF,AS,65,33,107.6,0.213325006583217,6314,53.3,5.93,1548,30577756,,,,,,,,,,,,,,,,,
 1,Albania,AL,EU,20,41,17.3,1.21505477717088,3006.666667,77,1.74,8994,3192723,,,,,,,,,,,,,,,,,
 2,Algeria,DZ,AF,3,28,28.4,3.5643605489965,121300.6667,75.7,2.78,12285,34950168,,,,,,,,,,,,,,,,,

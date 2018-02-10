@@ -12,8 +12,8 @@ function loadData(){
     if(error) {console.log(error);}
     // Main part
 
-    var data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
-    var bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
+    data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
+    bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
 
     // SVG canvas
     var map_svg = d3.select('#wv-wrapper')
@@ -195,14 +195,14 @@ d3.select('svg g.chart')
           .text(d.Name)
           .transition()
           .style('opacity', 1);
-        tip.show(d,rAxis);
+        tip.show(d,rAxis,curWave);
       })
       .on('mouseout', function(d) {
         d3.select('svg g.chart #countryLabel')
           .transition()
           .duration(1500)
           .style('opacity', 0);
-        tip.hide(rAxis);
+        tip.hide(rAxis,curWave);
       });
 
     map_svg.append("g").attr('id','states')
@@ -239,10 +239,10 @@ d3.select('svg g.chart')
         updateMap();
       })
       .on("mouseover", function(d) {
-        map_tip.show(d,wv_rAxis,xAxis);
+        map_tip.show(d,wv_rAxis,xAxis,curWave);
       })
       .on("mouseout", function(d) {
-        map_tip.hide(wv_rAxis,xAxis);
+        map_tip.hide(wv_rAxis,xAxis,curWave);
       });
     
 
@@ -288,13 +288,16 @@ d3.select('svg g.chart')
 
 
     function updateMap(init){
+      map_svg.call(map_tip);
       updateScales();
       circles.selectAll('circle')
       .transition()
       .duration(1000).ease('linear')
-      .attr("fill",function(d){return map_color(xScale(d[xAxis]));})
       .attr('r',function(d){
-        return (isNaN(data[curWave][d.idx][xAxis]) || isNaN(data[curWave][d.idx][wv_rAxis])?0:wv_rScale(data[curWave][d.idx][wv_rAxis]))
+        return (isNaN(data[curWave][d.idx][xAxis]) || isNaN(data[curWave][d.idx][wv_rAxis]))?0:wv_rScale(data[curWave][d.idx][wv_rAxis]);
+      })
+      .attr("fill",function(d){
+        return map_color(xScale(data[curWave][d.idx][xAxis]));
       })
       .style("opacity",function(d){
         if(selectedHighlight.length == 0){
@@ -312,6 +315,7 @@ d3.select('svg g.chart')
     }
     //// RENDERING FUNCTIONS
     function updateChart(init) {
+      svg.call(tip);
       updateScales();
 
       d3.select('svg g.chart')

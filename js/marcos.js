@@ -41,6 +41,7 @@ var toColor={
   'OC':"#dd4477"
 }
 
+var data = [], bounds = [];
 var xScale,yScale,rScale,wvScale,wv_rScale;
 var selectedHighlight = [];
 var curWave = 3;
@@ -49,15 +50,15 @@ var waveDescriptions= ['Wave3 (1995 - 1998)','Wave4 (1999 - 2004)','Wave5 (2005 
 var tip = d3.tip()
           .attr('class', 'd3-tip')
           .offset([-10, 0])
-          .html(function(d,s) {
-            return "<strong>Country: </strong><span class='details'>" + d.Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + d[s] +"</span>";
+          .html(function(d,s,w) {
+            return "<strong>Country: </strong><span class='details'>" + data[w][d.idx].Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + data[w][d.idx][s] +"</span>";
           });
 
 var map_tip = d3.tip()
           .attr('class', 'd3-tip')
           .offset([-10, 0])
-          .html(function(d,s,v) {
-            return "<strong>Country: </strong><span class='details'>" + d.Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + d[s] +"<br></span>" + "<strong>Value</strong>:<span class='details'>: " + d[v] + "</span>";
+          .html(function(d,s,v,w) {
+            return "<strong>Country: </strong><span class='details'>" + data[w][d.idx].Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + data[w][d.idx][s] +"<br></span>" + "<strong>Value</strong>:<span class='details'>: " + data[w][d.idx][v] + "</span>";
           })
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
           width = 1060 - margin.left - margin.right,
