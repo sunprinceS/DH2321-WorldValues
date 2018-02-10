@@ -11,8 +11,8 @@ function loadData(){
     if(error) {console.log(error);}
     // Main part
 
-    var data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
-    var bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
+    data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
+    bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
 
     // SVG canvas
     var svg = d3.select("#bubble-wrapper")
@@ -20,57 +20,32 @@ function loadData(){
       .attr("width", 1100)
       .attr("height", 740);
 
-    var tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([-10, 0])
-                .html(function(d,s) {
-                  return "<strong>Country: </strong><span class='details'>" + d.Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + d[s] +"</span>";
-                })
 
-    var margin = {top: 0, right: 0, bottom: 0, left: 0},
-                width = 1060 - margin.left - margin.right,
-                height = 600 - margin.top - margin.bottom;
 
-    var xScale, yScale;
-    var selectedHighlight = [];
+    svg.call(tip);
 
     svg.append('g')
       .classed('chart', true)
       .attr('transform', 'translate(80, -60)');
 
-    svg.call(tip);
-    d3.select("#reset-btn")
+    d3.selectAll(".reset-btn")
     .attr('class','ui green button')
-    .text('deselect highlight')
+    .text('Deselect Highlight')
     .on('click',function(d){
       selectedHighlight = [];
       updateChart();
     });
-    d3.select('#wave-text').text(waveDescriptions[curWave]);
+    d3.selectAll('#wave-text').text(waveDescriptions[curWave]);
     d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
 
 
     d3.select('#wave-slider')
     .on("input",function(){
-      curWave = d3.select('#wave-slider').property("value");
+      curWave = d3.select(this).property("value");
       updateChart();
       updateMenus();
-
     });
     // Build menus
-    d3.select('#wave-menu')
-    .selectAll('div')
-    .data(wave)
-    .enter().append('div')
-    .attr('class','item')
-    .text(function(d){return waveDescriptions[d];})
-    .classed('selected',function(d){
-      return d === curWave;
-    })
-    .on('click',function(d){
-      curWave = d;
-      updateChart();
-    });
 
     d3.select('#x-axis-menu')
       .selectAll('div')
@@ -134,11 +109,6 @@ function loadData(){
       .attr({'id': 'xLabel', 'x': 400, 'y': 780, 'text-anchor': 'middle'})
       .text(descriptions[xAxis]);
 
-    //d3.select('svg g.chart')
-      //.append('text')
-      //.attr({'id': 'rLabel', 'x':700, 'y':690, 'text-anchor': 'right'})
-      //.text(descriptions[rAxis]);
-
     d3.select('svg g.chart')
       .append('text')
       .attr('transform', 'translate(-60, 330)rotate(-90)')
@@ -179,7 +149,6 @@ function loadData(){
           .transition()
           .style('opacity', 1);
         tip.show(d,rAxis);
-        //d3.select(this).moveToFront();
       })
       .on('mouseout', function(d) {
         d3.select('svg g.chart #countryLabel')
@@ -187,7 +156,6 @@ function loadData(){
           .duration(1500)
           .style('opacity', 0);
         tip.hide(rAxis);
-        //d3.select(this).moveToBack();
       });
 
     var r_ordinal = d3.select('#r-ordinal')
@@ -196,7 +164,7 @@ function loadData(){
     .attr("height",300)
     
     r_ordinal.append('circle').attr('id','r-min').attr('cx',70).attr('cy',50).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].min));
-    r_ordinal.append('circle').attr('id','r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2);
+    r_ordinal.append('circle').attr('id','r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2));
     r_ordinal.append('circle').attr('id','r-max').attr('cx',70).attr('cy',200).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].max));
     r_ordinal.append('text').attr('id','r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][rAxis].min);
     r_ordinal.append('text').attr('id','r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2));
@@ -216,7 +184,6 @@ function loadData(){
       .attr('id', 'yAxis')
       .attr('transform', 'translate(-10, 0)')
       .call(makeYAxis);
-
 
 
     //// RENDERING FUNCTIONS
@@ -266,6 +233,7 @@ function loadData(){
 
       d3.select('#yLabel')
         .text(descriptions[yAxis]);
+
       // Update correlation
       var xArray = _.map(data[curWave], function(d) {
         if(isNaN(d[rAxis]))
@@ -331,7 +299,7 @@ function loadData(){
         .classed('selected', function(d) {
           return d === rAxis;
         });
-      d3.select('#wave-text').text(waveDescriptions[curWave]);
+      d3.selectAll('#wave-text').text(waveDescriptions[curWave]);
       d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
 
       d3.select('#r-ordinal').select('svg').selectAll('text')
@@ -350,7 +318,6 @@ function loadData(){
       .ease('quad-out')
       .attr('r',function(d){
         var tt = d3.select(this).attr('id');
-        console.log(tt);
         if(tt == 'r-min')
           return rScale(bounds[curWave][rAxis].min);
         else if(tt == 'r-medium')
@@ -360,6 +327,12 @@ function loadData(){
 
       })
     }
+
+
+
+
+
+
 
     });
 }
