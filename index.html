@@ -14,6 +14,8 @@
             <div class="item">
               <input id="wave-slider" type="range" min="0" max="3" value="3"/>
             </div>
+            <div class="item"><div id="reset-btn"></div></div>
+            <div class="item"><div id="toggle-btn"></div></div>
             <div class="right menu"><h3 class="ui item" id="wave-text"></h3></div>
           </div>
         </div>
@@ -62,7 +64,6 @@
               </div>
 
 
-              <div class="fixed reset-btn"></div>
               <div class="ui big segment">
                 <text id="r-text"></text>
               </div>
@@ -85,7 +86,7 @@
         <i class="World icon"></i>
         <div class="content">
           World Mapping
-          <div class="sub header">Map</div>
+          <div class="sub header" id="wv-x-description"></div>
         </div>
       </h1>
 
@@ -95,18 +96,12 @@
               <div class="ui vertical menu">
                 <div class="ui left pointing dropdown link item">
                   <i class="dropdown icon"></i>
-                  World Value Question
-                  <div class="menu" id="wv-wv-menu">
-                  </div>
-                </div>
-                <div class="ui left pointing dropdown link item">
-                  <i class="dropdown icon"></i>
                   rAxis
                   <div class="menu" id="wv-r-menu">
                   </div>
                 </div>
               </div>
-              <div class="reset-btn"></div>
+              <!--<div class="reset-btn"></div>-->
               <div class="ui big segment">
                 <text id="wv-r-text"></text>
               </div>
@@ -120,13 +115,6 @@
           </div>
       </div>
     </div>
-
-
-
-
-
-
-
 
       <div class="ui center aligned container">
           <div class="ui left floated buttons"><button class="large ui facebook button"><i class="facebook icon"></i>  Facebook</button><button class="ui twitter button"><i class="twitter icon"></i>  Twitter</button><button class="ui google plus button"><i class="google plus icon"></i>  Google Plus</button></div>
@@ -157,7 +145,5 @@
       <script src="js/marcos.js"></script>
       <script src="js/bubble.js"></script>
       <script>loadData();</script>
-      <script src="js/wvmap.js"></script>
-      <script>loadMapData();</script>
   </head>
 </html>

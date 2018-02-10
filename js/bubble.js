@@ -7,44 +7,72 @@ function loadData(){
   .defer(d3.csv,'data/wave4.csv')
   .defer(d3.csv,'data/wave5.csv')
   .defer(d3.csv,'data/wave6.csv')
-  .await(function(error,wave3,wave4,wave5,wave6){
+  .defer(d3.json,'data/world_countries.json')
+  .await(function(error,wave3,wave4,wave5,wave6,countries){
     if(error) {console.log(error);}
     // Main part
 
-    data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
-    bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
+    var data = [parseData(wave3),parseData(wave4),parseData(wave5),parseData(wave6)];
+    var bounds = [getBounds(data[0],1),getBounds(data[1],1),getBounds(data[2],1),getBounds(data[3],1)];
 
     // SVG canvas
+    var map_svg = d3.select('#wv-wrapper')
+    .append("svg")
+    .attr("width", 1100)
+    .attr("height", 640)
+    .attr('class','map');
+
+    var xy = d3.geo.equirectangular().scale(200);
+    var path = d3.geo.path().projection(xy);
+
     var svg = d3.select("#bubble-wrapper")
       .append("svg")
       .attr("width", 1100)
       .attr("height", 740);
-
+      var map_color = d3.scale.threshold()
+          .domain([100,200,300,400,500,600,700,800])
+          .range(["rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
 
     svg.call(tip);
+    map_svg.call(map_tip);
 
     svg.append('g')
       .classed('chart', true)
       .attr('transform', 'translate(80, -60)');
 
-    d3.selectAll(".reset-btn")
+    d3.select("#reset-btn")
     .attr('class','ui green button')
     .text('Deselect Highlight')
     .on('click',function(d){
       selectedHighlight = [];
+      updateMap()
       updateChart();
     });
-    d3.selectAll('#wave-text').text(waveDescriptions[curWave]);
+    d3.select('#toggle-btn')
+    .attr('class', 'ui orange button')
+    .text('Toggle x-y axis')
+    .on('click',function(d){
+      var t = xAxis;
+      xAxis = yAxis;
+      yAxis = t;
+      updateScales();
+      updateChart();
+      updateMenus();
+      updateMap();
+    });
     d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
+    d3.select('#wv-x-description').text('Map of' + descriptions[xAxis]);
 
 
     d3.select('#wave-slider')
     .on("input",function(){
       curWave = d3.select(this).property("value");
       updateChart();
+      updateMap();
       updateMenus();
     });
+
     // Build menus
 
     d3.select('#x-axis-menu')
@@ -59,6 +87,7 @@ function loadData(){
       .on('click', function(d) {
         xAxis = d;
         updateChart();
+        updateMap();
         updateMenus();
       });
 
@@ -92,6 +121,21 @@ function loadData(){
         updateMenus();
       });
 
+    d3.select('#wv-r-menu')
+      .selectAll('div')
+      .data(rAxisOptions)
+      .enter().append('div')
+      .attr('class','item')
+      .text(function(d) {return d;})
+      .classed('selected', function(d) {
+        return d === wv_rAxis;
+      })
+      .on('click', function(d) {
+        wv_rAxis = d;
+        updateMap();
+        updateMenus();
+      });
+
     // Country name
     d3.select('svg g.chart')
       .append('text')
@@ -117,7 +161,9 @@ function loadData(){
 
     // Render points
     updateScales();
-    d3.select('svg g.chart')
+
+
+d3.select('svg g.chart')
       .selectAll('circle')
       .data(data[curWave])
       .enter()
@@ -142,6 +188,7 @@ function loadData(){
           selectedHighlight.splice(indx,1);
         }
         updateChart();
+        updateMap();
       })
       .on('mouseover', function(d) {
         d3.select('svg g.chart #countryLabel')
@@ -158,6 +205,47 @@ function loadData(){
         tip.hide(rAxis);
       });
 
+    map_svg.append("g").attr('id','states')
+    .selectAll('path')
+    .data(countries.features)
+    .enter().append("svg:path")
+    .attr("d", path)
+    .on("mouseover", function(d) {
+    d3.select(this).style("fill","#6C0")
+        .append("svg:title")
+        .text(d.properties.name);})
+    .on("mouseout", function(d) {
+        d3.select(this).style("fill","#CED8B6");})
+
+
+    var circles = map_svg.append("svg:g").attr("id","circles");
+    circles.selectAll("circle").data(data[curWave]).enter()
+    .append("svg:circle")
+    .attr("cx", function(d, i) { return xy([+d["Longitude"],+d["Latitude"]])[0]; })
+      .attr("cy", function(d, i) { return xy([+d["Longitude"],+d["Latitude"]])[1]; })
+      .attr("r",  function(d) { 
+        return (isNaN(d[wv_rAxis]) || isNaN(d[xAxis]))?0:+wv_rScale(d[wv_rAxis]);
+      })
+    .attr("fill",function(d){return map_color(xScale(d[xAxis]));})
+      .on('click',function(d){
+        var indx = selectedHighlight.indexOf(d.idx);
+        if(indx == -1){
+          selectedHighlight.push(d.idx);
+        }
+        else{
+          selectedHighlight.splice(indx,1);
+        }
+        updateChart();
+        updateMap();
+      })
+      .on("mouseover", function(d) {
+        map_tip.show(d,wv_rAxis,xAxis);
+      })
+      .on("mouseout", function(d) {
+        map_tip.hide(wv_rAxis,xAxis);
+      });
+    
+
     var r_ordinal = d3.select('#r-ordinal')
     .append("svg")
     .attr("width",200)
@@ -169,7 +257,20 @@ function loadData(){
     r_ordinal.append('text').attr('id','r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][rAxis].min);
     r_ordinal.append('text').attr('id','r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2));
     r_ordinal.append('text').attr('id','r-max-t').attr('x',130).attr('y',205).text(bounds[curWave][rAxis].max.toExponential(2));
+
+    var wv_r_ordinal = d3.select('#wv-r-ordinal')
+    .append("svg")
+    .attr("width",200)
+    .attr("height",300)
+    
+    wv_r_ordinal.append('circle').attr('id','wv-r-min').attr('cx',70).attr('cy',50).attr('fill','#ffff1a').attr('r',rScale(10));
+    wv_r_ordinal.append('circle').attr('id','wv-r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2));
+    wv_r_ordinal.append('circle').attr('id','wv-r-max').attr('cx',70).attr('cy',200).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][wv_rAxis].max));
+    wv_r_ordinal.append('text').attr('id','wv-r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][wv_rAxis].min);
+    wv_r_ordinal.append('text').attr('id','wv-r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2).toExponential(2));
+    wv_r_ordinal.append('text').attr('id','wv-r-max-t').attr('x',130).attr('y',205).text(bounds[curWave][wv_rAxis].max.toExponential(2));
     updateChart(true);
+    updateMap(true);
     updateMenus();
 
     // Render axes
@@ -186,6 +287,29 @@ function loadData(){
       .call(makeYAxis);
 
 
+    function updateMap(init){
+      updateScales();
+      circles.selectAll('circle')
+      .transition()
+      .duration(1000).ease('linear')
+      .attr("fill",function(d){return map_color(xScale(d[xAxis]));})
+      .attr('r',function(d){
+        return (isNaN(data[curWave][d.idx][xAxis]) || isNaN(data[curWave][d.idx][wv_rAxis])?0:wv_rScale(data[curWave][d.idx][wv_rAxis]))
+      })
+      .style("opacity",function(d){
+        if(selectedHighlight.length == 0){
+          return 0.8;
+        }
+        else{
+          if(selectedHighlight.indexOf(d.idx) != -1){
+            return 0.8;
+          }
+          else{
+            return 0.2;
+          }
+        }
+      });
+    }
     //// RENDERING FUNCTIONS
     function updateChart(init) {
       updateScales();
@@ -223,6 +347,7 @@ function loadData(){
         .transition()
         .call(makeXAxis);
 
+      d3.select('#wv-x-description').text('Map of ' + descriptions[xAxis]);
       d3.select('#yAxis')
         .transition()
         .call(makeYAxis);
@@ -269,6 +394,10 @@ function loadData(){
       rScale = d3.scale.linear()
                       .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
                       .range([5, 50]);    
+      wv_rScale = d3.scale.linear()
+                      .domain([bounds[curWave][wv_rAxis].min, bounds[curWave][wv_rAxis].max])
+                      .range([5, 50]);    
+
     }
 
     function makeXAxis(s) {
@@ -301,6 +430,7 @@ function loadData(){
         });
       d3.selectAll('#wave-text').text(waveDescriptions[curWave]);
       d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
+      d3.select('#wv-r-text').text('⚫ Size: ' + descriptions[wv_rAxis]);
 
       d3.select('#r-ordinal').select('svg').selectAll('text')
       .text(function(d){
@@ -311,6 +441,30 @@ function loadData(){
           return ((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2);
         else
           return bounds[curWave][rAxis].max.toExponential(2);
+      });
+      d3.select('#wv-r-ordinal').select('svg').selectAll('text')
+      .text(function(d){
+        var tt = d3.select(this).attr('id');
+        if(tt == 'wv-r-min-t')
+          return bounds[curWave][wv_rAxis].min.toExponential(2);
+        else if(tt == 'wv-r-medium-t')
+          return ((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2).toExponential(2);
+        else
+          return bounds[curWave][wv_rAxis].max.toExponential(2);
+      });
+      d3.select('#wv-r-ordinal').select('svg').selectAll('circle')
+      .transition()
+      .duration(500)
+      .ease('quad-out')
+      .attr('r',function(d){
+        var tt = d3.select(this).attr('id');
+        if(tt == 'wv-r-min')
+          return wv_rScale(bounds[curWave][wv_rAxis].min);
+        else if(tt == 'wv-r-medium')
+          return wv_rScale((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2);
+        else
+          return wv_rScale(bounds[curWave][wv_rAxis].max);
+
       });
       d3.select('#r-ordinal').select('svg').selectAll('circle')
       .transition()
@@ -327,12 +481,5 @@ function loadData(){
 
       })
     }
-
-
-
-
-
-
-
     });
 }
