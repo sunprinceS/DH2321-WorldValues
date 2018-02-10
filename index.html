@@ -19,6 +19,8 @@
         <div class="sub header">2D Scatter Plot with Time Evolving</div>
         </h1>
 
+        </div>
+
         <div class="ui grid">
           <div class="row">
             <div class="three wide column">
@@ -50,26 +52,28 @@
               </div>
 
               <div id="r-ordinal"></div>
+
+          <div class="ui sticky">
+          <div class="ui fixed right aligned big segment">
+            <h3 class="ui header" id= "wave-text"></h3>
+              <input id="wave-slider" type="range" min="0" max="3" value="3"/>
+          </div>
+          </div>
             </div>
 
             <div class="one wide column"></div>
-            <div class="ten wide column">
+            <div class="eleven wide column">
               <div class="ui center aligned segment" id="bubble-wrapper"></div>
-            </div>
             <div class="two wide column">
-                <div class="overlay">
-                  <div class="ui fixed right aligned big segment">
-                    <h3 class="ui header" id= "wave-text"></h3>
-                      <input id="wave-slider" type="range" min="0" max="3" value="3"/>
-                  </div>
-                </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!--Map part-->
+    <div id="sticky1">
     <div class="ui blue big piled segment">
       <h1 class="ui header">
         <i class="World icon"></i>
@@ -109,9 +113,10 @@
               </div>
           </div>
       </div>
-    </div>
 
+        </div>
 
+        </div>
 
 
 
@@ -134,10 +139,13 @@
       <script src="semantic/dist/semantic.min.js"></script>
       <script>
           $('.ui.dropdown').dropdown();
-          $('.overlay').visibility({
-                  type: 'fixed',
-                  offset: 80
-            });
+$(document).ready(function(){
+     $('.ui.sticky')
+  .sticky({
+    context: '#sticky1'
+  });
+
+ })
       </script>
       <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
       <script src="https://d3js.org/d3-queue.v3.min.js"></script>
