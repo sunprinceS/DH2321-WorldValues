@@ -48,6 +48,8 @@ function loadData(){
     });
     d3.select('#wave-text').text(waveDescriptions[curWave]);
     d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
+
+
     d3.select('#wave-slider')
     .on("input",function(){
       curWave = d3.select('#wave-slider').property("value");
@@ -188,6 +190,17 @@ function loadData(){
         //d3.select(this).moveToBack();
       });
 
+    var r_ordinal = d3.select('#r-ordinal')
+    .append("svg")
+    .attr("width",200)
+    .attr("height",300)
+    
+    r_ordinal.append('circle').attr('id','r-min').attr('cx',70).attr('cy',50).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].min));
+    r_ordinal.append('circle').attr('id','r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2);
+    r_ordinal.append('circle').attr('id','r-max').attr('cx',70).attr('cy',200).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].max));
+    r_ordinal.append('text').attr('id','r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][rAxis].min);
+    r_ordinal.append('text').attr('id','r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2));
+    r_ordinal.append('text').attr('id','r-max-t').attr('x',130).attr('y',205).text(bounds[curWave][rAxis].max.toExponential(2));
     updateChart(true);
     updateMenus();
 
@@ -253,8 +266,6 @@ function loadData(){
 
       d3.select('#yLabel')
         .text(descriptions[yAxis]);
-      d3.select('#rLabel')
-        .text("● "+descriptions[rAxis]);
       // Update correlation
       var xArray = _.map(data[curWave], function(d) {
         if(isNaN(d[rAxis]))
@@ -280,8 +291,6 @@ function loadData(){
     }
 
     function updateScales() {
-      //console.log(bounds[curWave][yAxis].min);
-      //console.log(bounds[curWave][yAxis].max);
       xScale = d3.scale.linear()
                       .domain([bounds[curWave][xAxis].min, bounds[curWave][xAxis].max])
                       .range([20, 700]);
@@ -289,21 +298,9 @@ function loadData(){
                       .domain([bounds[curWave][yAxis].min, bounds[curWave][yAxis].max])
                       .range([650, 130]);
 
-      if(rAxis == 'CO2-total' || rAxis == 'CO2-avg'){
-        rScale = d3.scale.linear()
-                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
-                        .range([5, 50]);    
-      }
-      else if(rAxis == 'Population'){
-        rScale = d3.scale.sqrt()
-                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
-                        .range([5, 50]);    
-      }
-      else{
-        rScale = d3.scale.linear()
-                        .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
-                        .range([5, 40]);    
-      }
+      rScale = d3.scale.linear()
+                      .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
+                      .range([5, 50]);    
     }
 
     function makeXAxis(s) {
@@ -336,6 +333,32 @@ function loadData(){
         });
       d3.select('#wave-text').text(waveDescriptions[curWave]);
       d3.select('#r-text').text('⚫ Size: ' + descriptions[rAxis]);
+
+      d3.select('#r-ordinal').select('svg').selectAll('text')
+      .text(function(d){
+        var tt = d3.select(this).attr('id');
+        if(tt == 'r-min-t')
+          return bounds[curWave][rAxis].min.toExponential(2);
+        else if(tt == 'r-medium-t')
+          return ((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2);
+        else
+          return bounds[curWave][rAxis].max.toExponential(2);
+      });
+      d3.select('#r-ordinal').select('svg').selectAll('circle')
+      .transition()
+      .duration(500)
+      .ease('quad-out')
+      .attr('r',function(d){
+        var tt = d3.select(this).attr('id');
+        console.log(tt);
+        if(tt == 'r-min')
+          return rScale(bounds[curWave][rAxis].min);
+        else if(tt == 'r-medium')
+          return rScale((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2);
+        else
+          return rScale(bounds[curWave][rAxis].max);
+
+      })
     }
 
     });
