@@ -261,7 +261,7 @@ function loadData(){
     function updateScales() {
       xScale = d3.scale.linear()
                       .domain([bounds[curWave][xAxis].min, bounds[curWave][xAxis].max])
-                      .range([20, 700]);
+                      .range([20, 800]);
       yScale = d3.scale.linear()
                       .domain([bounds[curWave][yAxis].min, bounds[curWave][yAxis].max])
                       .range([650, 130]);

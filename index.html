@@ -6,20 +6,33 @@
       <link rel="stylesheet" type="text/css" href="css/svg.css" />
       <link rel="stylesheet" type="text/css" href="css/style.css" />
 
+      <div class="ui fixed inverted main menu">
+        <div class="ui container">
+          <a class="item">
+            <h1>Timebar</h1>
+          </a>
+            <div class="item">
+              <input id="wave-slider" type="range" min="0" max="3" value="3"/>
+            </div>
+            <div class="right menu"><h3 class="ui item" id="wave-text"></h3></div>
+          </div>
+        </div>
+      </div>
       <!--Title-->
       <div class="ui huge inverted segment">
+          <h1 class="ui center aligned header"></h1>
           <h1 class="ui center aligned header">Visualization of World Values</h1>
           <h3 class="ui center aligned header">By <a href="https://sunprinces.github.io/" target="_blank">Jui-Yang Hsu</a>&nbsp;&nbsp;<img class="ui avatar image" src="sun.jpg" /></h3>
       </div>
+
      <div class="ui violet big piled segment">
         <h1 class="ui header">
-        <i class="Cubes icon"></i>
-        <div class="content">
-          Values Comparison
-        <div class="sub header">2D Scatter Plot with Time Evolving</div>
+          <i class="Cubes icon"></i>
+          <div class="content">
+            Values Comparison
+          <div class="sub header">2D Scatter Plot with Time Evolving</div>
+          </div>
         </h1>
-
-        </div>
 
         <div class="ui grid">
           <div class="row">
@@ -31,49 +44,42 @@
                   <div class="menu" id="x-axis-menu">
                   </div>
                 </div>
+
                 <div class="ui left pointing dropdown link item">
                   <i class="dropdown icon"></i>
                   yAxis
                   <div class="menu" id="y-axis-menu">
                   </div>
                 </div>
+
                 <div class="ui left pointing dropdown link item">
                   <i class="dropdown icon"></i>
                   rAxis
                   <div class="menu" id="r-axis-menu">
                   </div>
+
                 </div>
               </div>
 
 
-              <div class="reset-btn"></div>
+              <div class="fixed reset-btn"></div>
               <div class="ui big segment">
                 <text id="r-text"></text>
               </div>
 
               <div id="r-ordinal"></div>
 
-          <div class="ui sticky">
-          <div class="ui fixed right aligned big segment">
-            <h3 class="ui header" id= "wave-text"></h3>
-              <input id="wave-slider" type="range" min="0" max="3" value="3"/>
-          </div>
-          </div>
             </div>
-
             <div class="one wide column"></div>
             <div class="eleven wide column">
               <div class="ui center aligned segment" id="bubble-wrapper"></div>
-            <div class="two wide column">
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
     <!--Map part-->
-    <div id="sticky1">
+
     <div class="ui blue big piled segment">
       <h1 class="ui header">
         <i class="World icon"></i>
@@ -108,15 +114,13 @@
               <div id="wv-r-ordinal"></div>
               <div class="one wide column"></div>
             </div>
-              <div class="eleven wide column">
+              <div class="twelve wide column">
                 <div class="ui center aligned segment" id="wv-wrapper"></div>
               </div>
           </div>
       </div>
+    </div>
 
-        </div>
-
-        </div>
 
 
 
@@ -138,15 +142,12 @@
       <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
       <script src="semantic/dist/semantic.min.js"></script>
       <script>
-          $('.ui.dropdown').dropdown();
-$(document).ready(function(){
-     $('.ui.sticky')
-  .sticky({
-    context: '#sticky1'
-  });
-
- })
-      </script>
+        $('.ui.sidebar').sidebar({
+            context: $('.bottom.segment')
+          })
+          .sidebar('attach events', '.menu .item');
+        $('.ui.dropdown').dropdown();
+        </script>
       <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
       <script src="https://d3js.org/d3-queue.v3.min.js"></script>
       <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -156,7 +157,7 @@ $(document).ready(function(){
       <script src="js/marcos.js"></script>
       <script src="js/bubble.js"></script>
       <script>loadData();</script>
-      <!--<script src="js/wvmap.js"></script>-->
-      <!--<script>loadMapData();</script>-->
+      <script src="js/wvmap.js"></script>
+      <script>loadMapData();</script>
   </head>
 </html>
