@@ -81,7 +81,7 @@ function loadData(){
       .enter().append('div')
       .attr('class','item')
       .text(function(d) {return d;})
-      .classed('selected', function(d) {
+      .classed('active', function(d) {
         return d === xAxis;
       })
       .on('click', function(d) {
@@ -97,7 +97,7 @@ function loadData(){
       .enter().append('div')
       .attr('class','item')
       .text(function(d) {return d;})
-      .classed('selected', function(d) {
+      .classed('active', function(d) {
         return d === yAxis;
       })
       .on('click', function(d) {
@@ -112,7 +112,7 @@ function loadData(){
       .enter().append('div')
       .attr('class','item')
       .text(function(d) {return d;})
-      .classed('selected', function(d) {
+      .classed('active', function(d) {
         return d === rAxis;
       })
       .on('click', function(d) {
@@ -127,7 +127,7 @@ function loadData(){
       .enter().append('div')
       .attr('class','item')
       .text(function(d) {return d;})
-      .classed('selected', function(d) {
+      .classed('active', function(d) {
         return d === wv_rAxis;
       })
       .on('click', function(d) {
@@ -418,18 +418,18 @@ d3.select('svg g.chart')
 
     function updateMenus() {
       d3.select('#x-axis-menu')
-        .selectAll('li')
-        .classed('selected', function(d) {
+        .selectAll('div')
+        .classed('active', function(d) {
           return d === xAxis;
         });
       d3.select('#y-axis-menu')
-        .selectAll('li')
-        .classed('selected', function(d) {
+        .selectAll('div')
+        .classed('active', function(d) {
           return d === yAxis;
       });
       d3.select('#r-axis-menu')
-        .selectAll('li')
-        .classed('selected', function(d) {
+        .selectAll('div')
+        .classed('active', function(d) {
           return d === rAxis;
         });
       d3.selectAll('#wave-text').text(waveDescriptions[curWave]);
