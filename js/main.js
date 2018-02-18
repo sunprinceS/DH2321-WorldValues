@@ -29,9 +29,6 @@ function loadData(){
       .append("svg")
       .attr("width", 1100)
       .attr("height", 740);
-      var map_color = d3.scale.threshold()
-          .domain([100,200,300,400,500,600,700,800])
-          .range(["rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
 
     svg.call(tip);
@@ -251,9 +248,9 @@ d3.select('svg g.chart')
     .attr("width",200)
     .attr("height",300)
     
-    r_ordinal.append('circle').attr('id','r-min').attr('cx',70).attr('cy',50).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].min));
-    r_ordinal.append('circle').attr('id','r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2));
-    r_ordinal.append('circle').attr('id','r-max').attr('cx',70).attr('cy',200).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][rAxis].max));
+    r_ordinal.append('circle').attr('id','r-min').attr('cx',70).attr('cy',50).attr('fill','#1500ff').attr('r',rScale(bounds[curWave][rAxis].min));
+    r_ordinal.append('circle').attr('id','r-medium').attr('cx',70).attr('cy',100).attr('fill','#1500ff').attr('r',rScale((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2));
+    r_ordinal.append('circle').attr('id','r-max').attr('cx',70).attr('cy',200).attr('fill','#1500ff').attr('r',rScale(bounds[curWave][rAxis].max));
     r_ordinal.append('text').attr('id','r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][rAxis].min);
     r_ordinal.append('text').attr('id','r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][rAxis].min+bounds[curWave][rAxis].max)/2).toExponential(2));
     r_ordinal.append('text').attr('id','r-max-t').attr('x',130).attr('y',205).text(bounds[curWave][rAxis].max.toExponential(2));
@@ -263,9 +260,9 @@ d3.select('svg g.chart')
     .attr("width",200)
     .attr("height",300)
     
-    wv_r_ordinal.append('circle').attr('id','wv-r-min').attr('cx',70).attr('cy',50).attr('fill','#ffff1a').attr('r',rScale(10));
-    wv_r_ordinal.append('circle').attr('id','wv-r-medium').attr('cx',70).attr('cy',100).attr('fill','#ffff1a').attr('r',rScale((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2));
-    wv_r_ordinal.append('circle').attr('id','wv-r-max').attr('cx',70).attr('cy',200).attr('fill','#ffff1a').attr('r',rScale(bounds[curWave][wv_rAxis].max));
+    wv_r_ordinal.append('circle').attr('id','wv-r-min').attr('cx',70).attr('cy',50).attr('fill','#1500ff').attr('r',rScale(10));
+    wv_r_ordinal.append('circle').attr('id','wv-r-medium').attr('cx',70).attr('cy',100).attr('fill','#1500ff').attr('r',rScale((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2));
+    wv_r_ordinal.append('circle').attr('id','wv-r-max').attr('cx',70).attr('cy',200).attr('fill','#1500ff').attr('r',rScale(bounds[curWave][wv_rAxis].max));
     wv_r_ordinal.append('text').attr('id','wv-r-min-t').attr('x',90).attr('y',55).text(bounds[curWave][wv_rAxis].min);
     wv_r_ordinal.append('text').attr('id','wv-r-medium-t').attr('x',110).attr('y',105).text(((bounds[curWave][wv_rAxis].min+bounds[curWave][wv_rAxis].max)/2).toExponential(2));
     wv_r_ordinal.append('text').attr('id','wv-r-max-t').attr('x',130).attr('y',205).text(bounds[curWave][wv_rAxis].max.toExponential(2));
@@ -397,10 +394,10 @@ d3.select('svg g.chart')
 
       rScale = d3.scale.linear()
                       .domain([bounds[curWave][rAxis].min, bounds[curWave][rAxis].max])
-                      .range([5, 50]);    
+                      .range([5, 40]);    
       wv_rScale = d3.scale.linear()
                       .domain([bounds[curWave][wv_rAxis].min, bounds[curWave][wv_rAxis].max])
-                      .range([5, 50]);    
+                      .range([4, 40]);    
 
     }
 

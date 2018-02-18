@@ -33,14 +33,15 @@ var descriptions = {
 };
 
 var toColor={
-  'AF':"#990099",
-  'AS':"#ff9900",
-  'EU':"#3366cc",
-  'NAA':"#dc3912",
-  'SA':"#109618",
-  'OC':"#dd4477"
+  'AF':"#00d5e9",
+  'AS':"#ff5872",
+  'EU':"#fffa00",
+  'NAA':"#ff9000",
+  'SA':"#7feb00",
+  'OC':"#7f00ff"
 }
 
+var ordianl_color = "#1500ff";
 var data = [], bounds = [];
 var xScale,yScale,rScale,wvScale,wv_rScale;
 var selectedHighlight = [];
@@ -60,6 +61,13 @@ var map_tip = d3.tip()
           .html(function(d,s,v,w) {
             return "<strong>Country: </strong><span class='details'>" + data[w][d.idx].Name + "<br></span>" + "<strong>" + s + ": </strong><span class='details'>" + data[w][d.idx][s] +"<br></span>" + "<strong>Value</strong>:<span class='details'>: " + data[w][d.idx][v] + "</span>";
           })
+//rainbow color scale
+//var map_color = d3.scale.threshold()
+  //.domain([100,200,300,400,500,600,700,800])
+  //.range(["#1decf0","#1ff1a8","#21f25c","#35f223","#83f324","#d0f426","#f4cd28","#f5832a","#f6392c"]);
+var map_color = d3.scale.threshold()
+  .domain([100,200,300,400,500,600,700,800])
+  .range(['#ffffe0','#ffdfa9','#ffbd84','#ff976d','#f47461','#e25056','#cb2f44','#ae112a','#8b0000']);
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
           width = 1060 - margin.left - margin.right,
           height = 600 - margin.top - margin.bottom;
