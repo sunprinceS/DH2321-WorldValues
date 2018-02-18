@@ -21,7 +21,7 @@ var descriptions = {
   "childrenThrift": "Important for children to save money (%)",
   "religiousPerson": "Be religious (%)",
   "divorceJus": "Divorce is justifiable (mean pt)",
-  "childrenImigination": "Important for children to have imagination (%)",
+  "childrenImagination": "Important for children to have imagination (%)",
   "NationProud": "Proud of country (pt)",
   "Mortality":"0-5 year-olds dying per 1000 born",
   "CO2-avg":"CO2 emission (tonnes per person)",
