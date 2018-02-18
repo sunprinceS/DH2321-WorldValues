@@ -67,7 +67,7 @@ var map_tip = d3.tip()
   //.range(["#1decf0","#1ff1a8","#21f25c","#35f223","#83f324","#d0f426","#f4cd28","#f5832a","#f6392c"]);
 var map_color = d3.scale.threshold()
   .domain([100,200,300,400,500,600,700,800])
-  .range(['#ffffe0','#ffdfa9','#ffbd84','#ff976d','#f47461','#e25056','#cb2f44','#ae112a','#8b0000']);
+  .range(['#0000ff','#5a44f8','#8163ea','#a076d4','#bb7fb8','#d27e96','#e6726f','#f55741','#ff0000']);
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
           width = 1060 - margin.left - margin.right,
           height = 600 - margin.top - margin.bottom;
